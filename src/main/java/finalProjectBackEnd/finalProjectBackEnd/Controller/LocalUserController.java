@@ -1,15 +1,18 @@
 package finalProjectBackEnd.finalProjectBackEnd.Controller;
 
 import finalProjectBackEnd.finalProjectBackEnd.Dto.CategoryDto.user.LocalUserRegistrationBodyDto;
+import finalProjectBackEnd.finalProjectBackEnd.exception.userException.LocalUserDoesNotExist;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.UserAlreadyExistsException;
+import finalProjectBackEnd.finalProjectBackEnd.model.LocalUser;
 import finalProjectBackEnd.finalProjectBackEnd.service.LocalUserService;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("user")
@@ -26,6 +29,15 @@ public class LocalUserController {
             return ResponseEntity.ok().build();
         } catch (UserAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+
+    @GetMapping("/find/{id}")
+    public Optional<LocalUser> findUser(@PathVariable Long id) {
+        try {
+            return localUserService.findUser(id);
+        } catch (LocalUserDoesNotExist e) {
+            throw new RuntimeException(e);
         }
     }
 

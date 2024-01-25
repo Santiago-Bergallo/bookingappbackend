@@ -4,16 +4,15 @@ import finalProjectBackEnd.finalProjectBackEnd.Dao.CityDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.CountryDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.LocalUserDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dto.CategoryDto.user.LocalUserRegistrationBodyDto;
+import finalProjectBackEnd.finalProjectBackEnd.exception.userException.LocalUserDoesNotExist;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.UserAlreadyExistsException;
 import finalProjectBackEnd.finalProjectBackEnd.model.City;
 import finalProjectBackEnd.finalProjectBackEnd.model.Country;
 import finalProjectBackEnd.finalProjectBackEnd.model.LocalUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Optional;
 
 @Service
 public class LocalUserService {
@@ -58,8 +57,12 @@ public class LocalUserService {
 
     }
 
+    public Optional<LocalUser> findUser(Long index) throws LocalUserDoesNotExist {
+        Optional<LocalUser> found = localUserDao.findById(index);
+        if (found.isEmpty()) {
+            throw new LocalUserDoesNotExist();
+        }
+        return found;
+    }
+    }
 
-
-
-
-}

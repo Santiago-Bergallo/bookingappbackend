@@ -1,17 +1,12 @@
 package finalProjectBackEnd.finalProjectBackEnd.Dao;
 
-import finalProjectBackEnd.finalProjectBackEnd.model.City;
+import finalProjectBackEnd.finalProjectBackEnd.model.Product;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface CityDao extends ListCrudRepository<City, Long> {
-    Optional<City> findByNameIgnoreCase(String name);
-
-
-
+public interface ProductDao extends ListCrudRepository<Product, Long> {
+    Optional<Product> findByTitleIgnoreCase(String title);
 }
-
-
