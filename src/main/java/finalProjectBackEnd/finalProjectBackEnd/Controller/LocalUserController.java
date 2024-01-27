@@ -1,13 +1,11 @@
 package finalProjectBackEnd.finalProjectBackEnd.Controller;
 
-import finalProjectBackEnd.finalProjectBackEnd.Dto.CategoryDto.user.LocalUserRegistrationBodyDto;
+import finalProjectBackEnd.finalProjectBackEnd.Dto.user.LocalUserRegistrationBodyDto;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.LocalUserDoesNotExist;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.UserAlreadyExistsException;
 import finalProjectBackEnd.finalProjectBackEnd.model.LocalUser;
 import finalProjectBackEnd.finalProjectBackEnd.service.LocalUserService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

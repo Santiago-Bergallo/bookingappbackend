@@ -1,6 +1,5 @@
-package finalProjectBackEnd.finalProjectBackEnd.Dto.CategoryDto.user;
+package finalProjectBackEnd.finalProjectBackEnd.Dto.user;
 
-import finalProjectBackEnd.finalProjectBackEnd.model.Country;
 import lombok.Getter;
 import lombok.Setter;
 

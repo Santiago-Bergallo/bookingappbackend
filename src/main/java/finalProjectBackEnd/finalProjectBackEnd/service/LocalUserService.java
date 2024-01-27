@@ -3,7 +3,7 @@ package finalProjectBackEnd.finalProjectBackEnd.service;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.CityDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.CountryDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.LocalUserDao;
-import finalProjectBackEnd.finalProjectBackEnd.Dto.CategoryDto.user.LocalUserRegistrationBodyDto;
+import finalProjectBackEnd.finalProjectBackEnd.Dto.user.LocalUserRegistrationBodyDto;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.LocalUserDoesNotExist;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.UserAlreadyExistsException;
 import finalProjectBackEnd.finalProjectBackEnd.model.City;
