@@ -1,6 +1,8 @@
 package finalProjectBackEnd.finalProjectBackEnd.Controller;
 
 import finalProjectBackEnd.finalProjectBackEnd.Dto.ProductDto.ProductRegistrationBodyDto;
+import finalProjectBackEnd.finalProjectBackEnd.exception.Categoryexception.CategoryDoesNotExistException;
+import finalProjectBackEnd.finalProjectBackEnd.exception.city.CityDoesNotExistException;
 import finalProjectBackEnd.finalProjectBackEnd.exception.productException.ProductAlreadyExistsException;
 import finalProjectBackEnd.finalProjectBackEnd.exception.productException.ProductDoesNotExistException;
 import finalProjectBackEnd.finalProjectBackEnd.model.Product;
@@ -26,15 +28,20 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ProductAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (CityDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (CategoryDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @GetMapping("/find/{id}")
-    public Optional<Product> findUser(@PathVariable Long id) {
+    public ResponseEntity findUser(@PathVariable Long id) {
         try {
-            return productService.findProduct(id);
+            Optional<Product> product = productService.findProduct(id);
+            return ResponseEntity.ok(product);
         } catch (ProductDoesNotExistException e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

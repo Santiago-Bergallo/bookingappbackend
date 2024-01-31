@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class ReservationDto {
 
     private LocalDate final_date;
 
-    private List<Product> products = new ArrayList<>();
+    private Product product;
 
-    private List<LocalUser> localUsers = new ArrayList<>();
+    private LocalUser localUser;
 
 }

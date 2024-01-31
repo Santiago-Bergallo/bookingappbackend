@@ -27,10 +27,14 @@ public class Reservation {
     @Column(name = "final_date", nullable = false)
     private LocalDate final_date;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LocalUser> localUsers = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "local_user_id", nullable = false)
+    private LocalUser localUser;
+
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
 }

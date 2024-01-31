@@ -1,9 +1,13 @@
 package finalProjectBackEnd.finalProjectBackEnd.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,13 +31,12 @@ public class LocalUser {
     @Column(name = "address")
     private String address;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @OneToMany(mappedBy = "localUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
+
+    @JsonManagedReference
+    @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
-
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
 
 }

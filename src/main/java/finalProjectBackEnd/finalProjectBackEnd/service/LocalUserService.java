@@ -4,13 +4,16 @@ import finalProjectBackEnd.finalProjectBackEnd.Dao.CityDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.CountryDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.LocalUserDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dto.user.LocalUserRegistrationBodyDto;
+import finalProjectBackEnd.finalProjectBackEnd.exception.city.CityDoesNotExistException;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.LocalUserDoesNotExist;
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.UserAlreadyExistsException;
+import finalProjectBackEnd.finalProjectBackEnd.model.Category;
 import finalProjectBackEnd.finalProjectBackEnd.model.City;
 import finalProjectBackEnd.finalProjectBackEnd.model.Country;
 import finalProjectBackEnd.finalProjectBackEnd.model.LocalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -27,30 +30,27 @@ public class LocalUserService {
     CountryDao countryDao;
 
 
-    public LocalUser registerUser(LocalUserRegistrationBodyDto localUserRegistrationBodyDto) throws UserAlreadyExistsException {
+    public LocalUser registerUser(LocalUserRegistrationBodyDto localUserRegistrationBodyDto) throws UserAlreadyExistsException, CityDoesNotExistException {
 
         if (localUserDao.findByUsernameIgnoreCase(localUserRegistrationBodyDto.getUsername()).isPresent() || localUserDao.findByEmailIgnoreCase(localUserRegistrationBodyDto.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException();
         }
 
-        Country newCountry = new Country();
-        City newCity = new City();
+        if (cityDao.findByNameIgnoreCase(localUserRegistrationBodyDto.getCityRegistrationDto().getName()).isEmpty()) {
+            throw new CityDoesNotExistException();
+        }
+
         LocalUser newUser = new LocalUser();
-
-        newCountry.setName(localUserRegistrationBodyDto.getCityRegistrationDto().getCountryRegistrationDto().getName());
-        newCountry.setCity(newCity);
-
-        newCity.setName(localUserRegistrationBodyDto.getCityRegistrationDto().getName());
-        newCity.setCountry(newCountry);
+        Country OpCountry = countryDao.findByNameIgnoreCase(localUserRegistrationBodyDto.getCityRegistrationDto().getCountryRegistrationDto().getName()).orElse(null);
+        City OpCity = cityDao.findByNameIgnoreCase(localUserRegistrationBodyDto.getCityRegistrationDto().getName()).get();
 
         newUser.setName(localUserRegistrationBodyDto.getName());
         newUser.setUsername(localUserRegistrationBodyDto.getUsername());
         newUser.setAddress(localUserRegistrationBodyDto.getAddress());
         newUser.setEmail(localUserRegistrationBodyDto.getEmail());
-        newUser.setCity(newCity);
+        OpCity.getLocalUsers().add(newUser);
+        newUser.setCity(OpCity);
 
-        countryDao.save(newCountry);
-        cityDao.save(newCity);
         localUserDao.save(newUser);
 
         return newUser;

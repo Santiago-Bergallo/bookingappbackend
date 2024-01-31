@@ -5,13 +5,14 @@ import finalProjectBackEnd.finalProjectBackEnd.exception.productException.Produc
 import finalProjectBackEnd.finalProjectBackEnd.exception.userException.LocalUserDoesNotExist;
 import finalProjectBackEnd.finalProjectBackEnd.model.Reservation;
 import finalProjectBackEnd.finalProjectBackEnd.service.ReservationService;
+import lombok.Getter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("reservation")
@@ -30,6 +31,16 @@ public class ReservationController {
         } catch (ProductDoesNotExistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+//    @GetMapping("/find")
+//    public List<Reservation> findByUsername(@RequestBody String username) {
+//        return reservationService.findUserReservations(username);
+//    }
+
+    @GetMapping("/list")
+    public List<Reservation> list() {
+        return reservationService.findAll();
     }
 
 }

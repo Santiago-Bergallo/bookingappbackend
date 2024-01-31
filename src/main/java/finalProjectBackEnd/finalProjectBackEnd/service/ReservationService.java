@@ -12,42 +12,60 @@ import finalProjectBackEnd.finalProjectBackEnd.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReservationService {
 
 @Autowired
-    ReservationDao reservationDao;
+ReservationDao reservationDao;
 
 @Autowired
-    LocalUserDao localUserDao;
+LocalUserDao localUserDao;
 
 @Autowired
-    ProductDao productDao;
+ProductDao productDao;
 
 
 public Reservation createReservation(ReservationDto reservationDto) throws LocalUserDoesNotExist, ProductDoesNotExistException {
 
-    if (localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUsers().get(0).getUsername()).isEmpty()) {
+    if (localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUser().getUsername()).isEmpty()) {
         throw new LocalUserDoesNotExist();
     }
-    if (productDao.findByTitleIgnoreCase(reservationDto.getProducts().get(0).getTitle()).isEmpty()){
+    if (productDao.findByTitleIgnoreCase(reservationDto.getProduct().getTitle()).isEmpty()){
         throw new ProductDoesNotExistException();
     }
-    LocalUser localUser = localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUsers().get(0).getUsername()).get();
-    Product product = productDao.findByTitleIgnoreCase(reservationDto.getProducts().get(0).getTitle()).get();
+    LocalUser localUser = localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUser().getUsername()).get();
+    Product product = productDao.findByTitleIgnoreCase(reservationDto.getProduct().getTitle()).get();
 
     Reservation reservation = new Reservation();
 
     reservation.setInitial_date(reservationDto.getInitial_date());
     reservation.setFinal_date(reservationDto.getFinal_date());
     reservation.setStage_product(reservationDto.getStage_product());
-    reservation.setProducts(reservation.getProducts());
-    reservation.getProducts().add(product);
-    reservation.setLocalUsers(reservation.getLocalUsers());
-    reservation.getLocalUsers().add(localUser);
+    reservation.setProduct(reservationDto.getProduct());
+    reservation.setLocalUser(reservation.getLocalUser());
+
+    localUser.getReservations().add(reservation);
+    product.getReservations().add(reservation);
+    localUserDao.save(localUser);
+    productDao.save(product);
     reservationDao.save(reservation);
+
+
     return reservation;
 };
 
+//    public List<Reservation> findUserReservations(String username)  {
+//        List<Reservation> found = reservationDao.findByLocalUsers_UsernameIgnoreCase(username);
+//        for (Reservation reservation : found) {
+//            found.add(reservation);
+//        }
+//        return found;
+//    }
+
+    public List<Reservation> findAll() {
+        return reservationDao.findAll();
+    }
 
 }

@@ -2,15 +2,14 @@ package finalProjectBackEnd.finalProjectBackEnd.service;
 
 import finalProjectBackEnd.finalProjectBackEnd.Dao.CategoryDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.CityDao;
+import finalProjectBackEnd.finalProjectBackEnd.Dao.CountryDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dao.ProductDao;
 import finalProjectBackEnd.finalProjectBackEnd.Dto.ProductDto.ProductRegistrationBodyDto;
+import finalProjectBackEnd.finalProjectBackEnd.exception.Categoryexception.CategoryDoesNotExistException;
+import finalProjectBackEnd.finalProjectBackEnd.exception.city.CityDoesNotExistException;
 import finalProjectBackEnd.finalProjectBackEnd.exception.productException.ProductAlreadyExistsException;
 import finalProjectBackEnd.finalProjectBackEnd.exception.productException.ProductDoesNotExistException;
-import finalProjectBackEnd.finalProjectBackEnd.exception.userException.LocalUserDoesNotExist;
-import finalProjectBackEnd.finalProjectBackEnd.model.Category;
-import finalProjectBackEnd.finalProjectBackEnd.model.City;
-import finalProjectBackEnd.finalProjectBackEnd.model.LocalUser;
-import finalProjectBackEnd.finalProjectBackEnd.model.Product;
+import finalProjectBackEnd.finalProjectBackEnd.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,31 +27,31 @@ public class ProductService {
     @Autowired
     CategoryDao categoryDao;
 
-    public Product createProduct(ProductRegistrationBodyDto productRegistrationBodyDto) throws ProductAlreadyExistsException {
+
+    public Product createProduct(ProductRegistrationBodyDto productRegistrationBodyDto) throws ProductAlreadyExistsException, CityDoesNotExistException, CategoryDoesNotExistException {
 
         if (productDao.findByTitleIgnoreCase(productRegistrationBodyDto.getTitle()).isPresent()) {
             throw new ProductAlreadyExistsException();
         }
+        if (cityDao.findByNameIgnoreCase(productRegistrationBodyDto.getCityRegistrationDto().getName()).isPresent() && categoryDao.findByTitleIgnoreCase(productRegistrationBodyDto.getCategoryRegistrationBody().getTitle()).isPresent()) {
 
-        Optional<City> city = cityDao.findByNameIgnoreCase(productRegistrationBodyDto.getCityRegistrationDto().getName());
-        Optional<Category> category = categoryDao.findByTitleIgnoreCase(productRegistrationBodyDto.getCategoryRegistrationBody().getTitle());
-        City found = null;
-        Category foundCat = null;
-        if (city.isPresent()) {
-            found = city.get();
-        }
-        if (category.isPresent()) {
-            foundCat = category.get();
-        }
 
-                Product newProduct = new Product();
-                newProduct.setTitle(productRegistrationBodyDto.getTitle());
-                newProduct.setShortDescription(productRegistrationBodyDto.getShortDescription());
-                newProduct.setAddress(productRegistrationBodyDto.getAddress());
-                newProduct.setCity(found);
-                newProduct.setCategory(foundCat);
-                productDao.save(newProduct);
-                return newProduct;
+            Product newProduct = new Product();
+            City city = cityDao.findByNameIgnoreCase(productRegistrationBodyDto.getCityRegistrationDto().getName()).get();
+            Category category = categoryDao.findByTitleIgnoreCase(productRegistrationBodyDto.getCategoryRegistrationBody().getTitle()).get();
+
+            newProduct.setTitle(productRegistrationBodyDto.getTitle());
+            newProduct.setShortDescription(productRegistrationBodyDto.getShortDescription());
+            newProduct.setAddress(productRegistrationBodyDto.getAddress());
+            newProduct.setCity(city);
+            newProduct.setCategory(category);
+            productDao.save(newProduct);
+            return newProduct;
+        } else {
+            if (cityDao.findByNameIgnoreCase(productRegistrationBodyDto.getCityRegistrationDto().getName()).isEmpty()) {
+                throw new CityDoesNotExistException();
+            } else throw new CategoryDoesNotExistException();
+        }
     }
 
     public Optional<Product> findProduct(Long index) throws ProductDoesNotExistException {
@@ -64,4 +63,5 @@ public class ProductService {
     }
 
 
-}
+    }
+

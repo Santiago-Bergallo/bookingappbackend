@@ -3,6 +3,8 @@ package finalProjectBackEnd.finalProjectBackEnd.Dto.user;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter @Setter
 public class CityRegistrationDto {
 
@@ -10,6 +12,6 @@ public class CityRegistrationDto {
 
     private CountryRegistrationDto countryRegistrationDto;
 
-    private LocalUserRegistrationBodyDto localUserRegistrationBodyDto;
+
 
 }

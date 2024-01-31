@@ -1,9 +1,11 @@
 package finalProjectBackEnd.finalProjectBackEnd.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,9 +34,7 @@ public class Product {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 
 }
