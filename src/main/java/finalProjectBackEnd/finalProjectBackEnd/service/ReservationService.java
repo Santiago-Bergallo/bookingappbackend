@@ -29,41 +29,34 @@ ProductDao productDao;
 
 public Reservation createReservation(ReservationDto reservationDto) throws LocalUserDoesNotExist, ProductDoesNotExistException {
 
-    if (localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUser().getUsername()).isEmpty()) {
-        throw new LocalUserDoesNotExist();
+    if (localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUserRegistrationBodyDto().getUsername()).isPresent() && productDao.findByTitleIgnoreCase(reservationDto.getProductRegistrationBodyDto().getTitle()).isPresent()) {
+        LocalUser localUser = localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUserRegistrationBodyDto().getUsername()).get();
+        Product product = productDao.findByTitleIgnoreCase(reservationDto.getProductRegistrationBodyDto().getTitle()).get();
+
+        Reservation reservation = new Reservation();
+
+        reservation.setInitial_date(reservationDto.getInitial_date());
+        reservation.setFinal_date(reservationDto.getFinal_date());
+        reservation.setStage_product(reservationDto.getStage_product());
+        reservation.setProduct(product);
+        reservation.setLocalUser(localUser);
+
+        localUser.getReservations().add(reservation);
+        product.getReservations().add(reservation);
+        localUserDao.save(localUser);
+        productDao.save(product);
+        reservationDao.save(reservation);
+
+
+        return reservation;
     }
-    if (productDao.findByTitleIgnoreCase(reservationDto.getProduct().getTitle()).isEmpty()){
-        throw new ProductDoesNotExistException();
+    else {
+        if (localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUserRegistrationBodyDto().getUsername()).isEmpty()) {
+            throw new LocalUserDoesNotExist();
+        }
+        else throw new ProductDoesNotExistException();
     }
-    LocalUser localUser = localUserDao.findByUsernameIgnoreCase(reservationDto.getLocalUser().getUsername()).get();
-    Product product = productDao.findByTitleIgnoreCase(reservationDto.getProduct().getTitle()).get();
-
-    Reservation reservation = new Reservation();
-
-    reservation.setInitial_date(reservationDto.getInitial_date());
-    reservation.setFinal_date(reservationDto.getFinal_date());
-    reservation.setStage_product(reservationDto.getStage_product());
-    reservation.setProduct(reservationDto.getProduct());
-    reservation.setLocalUser(reservation.getLocalUser());
-
-    localUser.getReservations().add(reservation);
-    product.getReservations().add(reservation);
-    localUserDao.save(localUser);
-    productDao.save(product);
-    reservationDao.save(reservation);
-
-
-    return reservation;
-};
-
-//    public List<Reservation> findUserReservations(String username)  {
-//        List<Reservation> found = reservationDao.findByLocalUsers_UsernameIgnoreCase(username);
-//        for (Reservation reservation : found) {
-//            found.add(reservation);
-//        }
-//        return found;
-//    }
-
+}
     public List<Reservation> findAll() {
         return reservationDao.findAll();
     }
