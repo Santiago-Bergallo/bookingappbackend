@@ -1,9 +1,8 @@
 package finalProjectBackEnd.finalProjectBackEnd.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,30 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
+
+
+    @JsonManagedReference @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImageModel> imageModels = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Feature feature;
+
+    public Feature getFeature() {
+        return feature;
+    }
+
+    public void setFeature(Feature feature) {
+        this.feature = feature;
+    }
+
+    public List<ImageModel> getImages() {
+        return imageModels;
+    }
+
+    public void setImages(List<ImageModel> imageModels) {
+        this.imageModels = imageModels;
+    }
 
     public Long getId() {
         return id;
@@ -89,4 +112,7 @@ public class Product {
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }
+
+
+
 }

@@ -37,6 +37,19 @@ public class Reservation {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @ElementCollection
+    @Column(name = "stay")
+    @CollectionTable(name = "reservation_stay", joinColumns = @JoinColumn(name = "owner_id"))
+    private List<LocalDate> stay = new ArrayList<>();
+
+    public List<LocalDate> getStay() {
+        return stay;
+    }
+
+    public void setStay(List<LocalDate> stay) {
+        this.stay = stay;
+    }
+
     public Long getId() {
         return id;
     }

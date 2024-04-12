@@ -1,9 +1,13 @@
 package finalProjectBackEnd.finalProjectBackEnd.Dto.ProductDto;
 
 import finalProjectBackEnd.finalProjectBackEnd.Dto.CategoryDto.CategoryRegistrationBody;
+import finalProjectBackEnd.finalProjectBackEnd.Dto.featureDto.FeatureDto;
+import finalProjectBackEnd.finalProjectBackEnd.Dto.image.ImageDto;
 import finalProjectBackEnd.finalProjectBackEnd.Dto.user.CityRegistrationDto;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 
 public class ProductRegistrationBodyDto {
@@ -17,6 +21,10 @@ public class ProductRegistrationBodyDto {
     private CategoryRegistrationBody categoryRegistrationBody;
 
     private CityRegistrationDto cityRegistrationDto;
+
+    private List<ImageDto> imageDtoList;
+
+    private FeatureDto featureDto;
 
     public String getTitle() {
         return title;
@@ -56,5 +64,21 @@ public class ProductRegistrationBodyDto {
 
     public void setCityRegistrationDto(CityRegistrationDto cityRegistrationDto) {
         this.cityRegistrationDto = cityRegistrationDto;
+    }
+
+    public List<ImageDto> getImageDtoList() {
+        return imageDtoList;
+    }
+
+    public void setImageDtoList(List<ImageDto> imageDtoList) {
+        this.imageDtoList = imageDtoList;
+    }
+
+    public FeatureDto getFeatureDto() {
+        return featureDto;
+    }
+
+    public void setFeatureDto(FeatureDto featureDto) {
+        this.featureDto = featureDto;
     }
 }
